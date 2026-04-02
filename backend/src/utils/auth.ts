@@ -5,23 +5,21 @@ const JWT_ACCESS_SECRET: string =
   process.env.JWT_ACCESS_SECRET || "access-secret-key";
 const JWT_REFRESH_SECRET: string =
   process.env.JWT_REFRESH_SECRET || "refresh-secret-key";
-const JWT_ACCESS_EXPIRES_IN = process.env.JWT_ACCESS_EXPIRES_IN || "15m";
-const JWT_REFRESH_EXPIRES_IN = process.env.JWT_REFRESH_EXPIRES_IN || "7d";
+const JWT_ACCESS_EXPIRES_IN: string =
+  process.env.JWT_ACCESS_EXPIRES_IN || "15m";
+const JWT_REFRESH_EXPIRES_IN: string =
+  process.env.JWT_REFRESH_EXPIRES_IN || "7d";
 
 export const generateAccessToken = (userId: string): string => {
-  return jwt.sign(
-    { userId },
-    JWT_ACCESS_SECRET as string,
-    { expiresIn: JWT_ACCESS_EXPIRES_IN } as SignOptions
-  );
+  return jwt.sign({ userId }, JWT_ACCESS_SECRET, {
+    expiresIn: JWT_ACCESS_EXPIRES_IN as any,
+  });
 };
 
 export const generateRefreshToken = (userId: string): string => {
-  return jwt.sign(
-    { userId },
-    JWT_REFRESH_SECRET as string,
-    { expiresIn: JWT_REFRESH_EXPIRES_IN } as SignOptions
-  );
+  return jwt.sign({ userId }, JWT_REFRESH_SECRET, {
+    expiresIn: JWT_REFRESH_EXPIRES_IN as any,
+  });
 };
 
 export const verifyAccessToken = (token: string): { userId: string } | null => {
