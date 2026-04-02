@@ -9,17 +9,19 @@ const JWT_ACCESS_EXPIRES_IN = process.env.JWT_ACCESS_EXPIRES_IN || "15m";
 const JWT_REFRESH_EXPIRES_IN = process.env.JWT_REFRESH_EXPIRES_IN || "7d";
 
 export const generateAccessToken = (userId: string): string => {
-  const options: SignOptions = {
-    expiresIn: JWT_ACCESS_EXPIRES_IN,
-  };
-  return jwt.sign({ userId }, JWT_ACCESS_SECRET, options);
+  return jwt.sign(
+    { userId },
+    JWT_ACCESS_SECRET as string,
+    { expiresIn: JWT_ACCESS_EXPIRES_IN } as SignOptions
+  );
 };
 
 export const generateRefreshToken = (userId: string): string => {
-  const options: SignOptions = {
-    expiresIn: JWT_REFRESH_EXPIRES_IN,
-  };
-  return jwt.sign({ userId }, JWT_REFRESH_SECRET, options);
+  return jwt.sign(
+    { userId },
+    JWT_REFRESH_SECRET as string,
+    { expiresIn: JWT_REFRESH_EXPIRES_IN } as SignOptions
+  );
 };
 
 export const verifyAccessToken = (token: string): { userId: string } | null => {
