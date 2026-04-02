@@ -1,21 +1,25 @@
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
+import jwt, { SignOptions } from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
-const JWT_ACCESS_SECRET = process.env.JWT_ACCESS_SECRET || 'access-secret-key';
-const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'refresh-secret-key';
-const JWT_ACCESS_EXPIRES_IN = process.env.JWT_ACCESS_EXPIRES_IN || '15m';
-const JWT_REFRESH_EXPIRES_IN = process.env.JWT_REFRESH_EXPIRES_IN || '7d';
+const JWT_ACCESS_SECRET: string =
+  process.env.JWT_ACCESS_SECRET || "access-secret-key";
+const JWT_REFRESH_SECRET: string =
+  process.env.JWT_REFRESH_SECRET || "refresh-secret-key";
+const JWT_ACCESS_EXPIRES_IN = process.env.JWT_ACCESS_EXPIRES_IN || "15m";
+const JWT_REFRESH_EXPIRES_IN = process.env.JWT_REFRESH_EXPIRES_IN || "7d";
 
 export const generateAccessToken = (userId: string): string => {
-  return jwt.sign({ userId }, JWT_ACCESS_SECRET, {
+  const options: SignOptions = {
     expiresIn: JWT_ACCESS_EXPIRES_IN,
-  });
+  };
+  return jwt.sign({ userId }, JWT_ACCESS_SECRET, options);
 };
 
 export const generateRefreshToken = (userId: string): string => {
-  return jwt.sign({ userId }, JWT_REFRESH_SECRET, {
+  const options: SignOptions = {
     expiresIn: JWT_REFRESH_EXPIRES_IN,
-  });
+  };
+  return jwt.sign({ userId }, JWT_REFRESH_SECRET, options);
 };
 
 export const verifyAccessToken = (token: string): { userId: string } | null => {
@@ -26,7 +30,9 @@ export const verifyAccessToken = (token: string): { userId: string } | null => {
   }
 };
 
-export const verifyRefreshToken = (token: string): { userId: string } | null => {
+export const verifyRefreshToken = (
+  token: string,
+): { userId: string } | null => {
   try {
     return jwt.verify(token, JWT_REFRESH_SECRET) as { userId: string };
   } catch (error) {
@@ -41,7 +47,7 @@ export const hashPassword = async (password: string): Promise<string> => {
 
 export const comparePasswords = async (
   password: string,
-  hashedPassword: string
+  hashedPassword: string,
 ): Promise<boolean> => {
   return bcrypt.compare(password, hashedPassword);
 };
